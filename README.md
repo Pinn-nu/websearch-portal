@@ -1,71 +1,132 @@
-# Welcome to your GPT Engineer project
+# RAG Search Engine Web Application
 
-## Project info
+A modern web application for RAG (Retrieval-Augmented Generation) search using MongoDB, Google VertexAI API, and FastAPI backend.
 
-**URL**: https://run.gptengineer.app/projects/2425ae5e-6e54-4dcd-b742-65bdce8c0101/improve
+## Features
 
-## How can I edit this code?
+- Clean and elegant user interface
+- Secure login system
+- Google-like search experience
+- Real-time search results with modal view
+- Search history tracking
+- Responsive design
 
-There are several ways of editing your application.
+## Prerequisites
 
-**Use GPT Engineer**
+Before you begin, ensure you have the following installed:
+- Node.js (v18 or higher)
+- Python (v3.9 or higher)
+- MongoDB (v6.0 or higher)
+- Google Cloud CLI (for VertexAI API access)
 
-Simply visit the GPT Engineer project at [GPT Engineer](https://gptengineer.app/projects/2425ae5e-6e54-4dcd-b742-65bdce8c0101/improve) and start prompting.
+## Setup Instructions
 
-Changes made via gptengineer.app will be committed automatically to this repo.
+### Frontend Setup
 
-**Use your preferred IDE**
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd <project-directory>
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in the GPT Engineer UI.
+2. Install frontend dependencies:
+```bash
+npm install
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3. Create a `.env` file in the root directory:
+```env
+VITE_API_URL=http://localhost:8000
+```
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The frontend will be available at `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Backend Setup
 
-**Use GitHub Codespaces**
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+2. Create and activate a Python virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+```
 
-## What technologies are used for this project?
+3. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-This project is built with .
+4. Set up environment variables by creating a `.env` file:
+```env
+MONGODB_URI=mongodb://localhost:27017/rag_search
+GOOGLE_APPLICATION_CREDENTIALS=path/to/your/credentials.json
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+5. Start the FastAPI server:
+```bash
+uvicorn main:app --reload
+```
 
-## How can I deploy this project?
+The backend API will be available at `http://localhost:8000`
 
-All GPT Engineer projects can be deployed directly via the GPT Engineer app.
+### Google Cloud Setup
 
-Simply visit your project at [GPT Engineer](https://gptengineer.app/projects/2425ae5e-6e54-4dcd-b742-65bdce8c0101/improve) and click on Share -> Publish.
+1. Create a Google Cloud project and enable VertexAI API
+2. Create a service account and download the credentials JSON file
+3. Set the path to your credentials in the backend `.env` file
 
-## I want to use a custom domain - is that possible?
+### MongoDB Setup
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.gptengineer.app/tips-tricks/custom-domain/)
+1. Install MongoDB Community Edition
+2. Start the MongoDB service
+3. Create a new database named 'rag_search'
+
+## API Documentation
+
+Once the backend is running, visit `http://localhost:8000/docs` for the complete API documentation.
+
+## Development
+
+- Frontend code is in the `src` directory
+- Backend code is in the `backend` directory
+- Components use shadcn/ui library
+- Styling is done with Tailwind CSS
+
+## Available Scripts
+
+Frontend:
+```bash
+npm run dev        # Start development server
+npm run build      # Build for production
+npm run preview    # Preview production build
+```
+
+Backend:
+```bash
+uvicorn main:app --reload    # Start development server
+pytest                       # Run tests
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, please open an issue in the repository or contact the development team.

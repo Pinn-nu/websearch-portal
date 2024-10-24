@@ -15,7 +15,6 @@ const Search = () => {
     e.preventDefault();
     try {
       // TODO: Integrate with backend search API
-      // Simulated results for now
       const mockResults = [
         {
           id: 1,
@@ -41,10 +40,6 @@ const Search = () => {
     navigate("/");
   };
 
-  const handleHistory = () => {
-    toast.info("Search history feature coming soon!");
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm p-4">
@@ -61,7 +56,7 @@ const Search = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleHistory}
+              onClick={() => navigate("/history")}
               className="hover:bg-gray-100"
             >
               <History className="h-5 w-5" />

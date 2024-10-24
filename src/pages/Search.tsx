@@ -3,10 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SearchResult from "@/components/SearchResult";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { Home, History, LogOut } from "lucide-react";
 
 const Search = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,8 +36,48 @@ const Search = () => {
     }
   };
 
+  const handleLogout = () => {
+    toast.success("Logged out successfully");
+    navigate("/");
+  };
+
+  const handleHistory = () => {
+    toast.info("Search history feature coming soon!");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white shadow-sm p-4">
+        <div className="max-w-4xl mx-auto flex justify-between items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/")}
+            className="hover:bg-gray-100"
+          >
+            <Home className="h-5 w-5" />
+          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleHistory}
+              className="hover:bg-gray-100"
+            >
+              <History className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="hover:bg-gray-100"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </nav>
+
       <div className="max-w-4xl mx-auto pt-8 px-4">
         <form onSubmit={handleSearch} className="flex gap-2 mb-8">
           <Input

@@ -11,6 +11,7 @@ interface SearchHistoryItem {
     id: number;
     title: string;
     snippet: string;
+    content: string;
   }>;
 }
 
@@ -28,6 +29,7 @@ const History = () => {
           id: 1,
           title: "Understanding React Hooks",
           snippet: "A comprehensive guide to React Hooks...",
+          content: "Full content about React Hooks would be displayed here...",
         },
       ],
     },
@@ -40,6 +42,7 @@ const History = () => {
           id: 2,
           title: "TypeScript for Beginners",
           snippet: "Learn TypeScript from scratch...",
+          content: "Complete TypeScript tutorial content would be here...",
         },
       ],
     },
@@ -74,8 +77,12 @@ const History = () => {
                 </div>
                 <div className="space-y-2">
                   {item.results.map((result) => (
-                    <div key={result.id} className="pl-4 border-l-2 border-gray-200">
-                      <h3 className="font-medium">{result.title}</h3>
+                    <div
+                      key={result.id}
+                      className="pl-4 border-l-2 border-gray-200 cursor-pointer"
+                      onClick={() => navigate("/result", { state: result })}
+                    >
+                      <h3 className="font-medium hover:text-blue-600">{result.title}</h3>
                       <p className="text-sm text-gray-600">{result.snippet}</p>
                     </div>
                   ))}

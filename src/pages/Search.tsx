@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import SearchResult from "@/components/SearchResult";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Home, History, LogOut } from "lucide-react";
@@ -87,7 +86,16 @@ const Search = () => {
         
         <div className="space-y-4">
           {results.map((result) => (
-            <SearchResult key={result.id} result={result} />
+            <div
+              key={result.id}
+              className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => navigate("/result", { state: result })}
+            >
+              <h2 className="text-lg font-semibold text-blue-600 hover:underline mb-2">
+                {result.title}
+              </h2>
+              <p className="text-gray-600">{result.snippet}</p>
+            </div>
           ))}
         </div>
       </div>

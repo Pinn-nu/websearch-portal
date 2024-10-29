@@ -1,42 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Home, History, LogOut } from "lucide-react";
+import axios from 'axios';
+import { useAuth } from "@/context/AuthContext";
 
 const Search = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/");
+    } else if (location.state?.query) {
+      setQuery(location.state.query);
+      handleSearch(location.state.query);
+    }
+  }, [isAuthenticated, navigate, location.state]);
+
+  const handleSearch = async (searchQuery: string) => {
     try {
-      // TODO: Integrate with backend search API
-      const mockResults = [
-        {
-          id: 1,
-          title: "Sample Document 1",
-          snippet: "This is a sample search result that matches your query...",
-          content: "Full content of the document would be displayed here...",
-        },
-        {
-          id: 2,
-          title: "Sample Document 2",
-          snippet: "Another relevant search result for your consideration...",
-          content: "Complete content of the second document...",
-        },
-      ];
-      setResults(mockResults);
+      const response = await axios.post("http://127.0.0.1:8101/retrieve", {
+        query: searchQuery,
+      });
+
+      const serverResults = response.data;
+      setResults(serverResults);
+      toast.success("Search successful!");
     } catch (error) {
-      toast.error("Search failed. Please try again.");
+      if (axios.isAxiosError(error) && error.response) {
+        const errorMessage = error.response.data.message || "Search failed. Please try again.";
+        toast.error(`Search failed: ${errorMessage}`);
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+      console.error("Search error:", error);
     }
   };
 
   const handleLogout = () => {
+    logout();
     toast.success("Logged out successfully");
     navigate("/");
+  };
+
+  const openResult = (result: any) => {
+    localStorage.setItem("selectedResult", JSON.stringify(result));
+    window.open("/result", "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -46,7 +61,7 @@ const Search = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/search")}
             className="hover:bg-gray-100"
           >
             <Home className="h-5 w-5" />
@@ -73,7 +88,7 @@ const Search = () => {
       </nav>
 
       <div className="max-w-4xl mx-auto pt-8 px-4">
-        <form onSubmit={handleSearch} className="flex gap-2 mb-8">
+        <form onSubmit={(e) => { e.preventDefault(); handleSearch(query); }} className="flex gap-2 mb-8">
           <Input
             type="text"
             placeholder="Enter your search query..."
@@ -85,18 +100,24 @@ const Search = () => {
         </form>
         
         <div className="space-y-4">
-          {results.map((result) => (
-            <div
-              key={result.id}
-              className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => navigate("/result", { state: result })}
-            >
-              <h2 className="text-lg font-semibold text-blue-600 hover:underline mb-2">
-                {result.title}
-              </h2>
-              <p className="text-gray-600">{result.snippet}</p>
-            </div>
-          ))}
+          {results.length > 0 ? (
+            results.map((result) => (
+              <div
+                key={result.metadata._id}
+                className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => openResult(result)}
+              >
+                <h2 className="text-lg font-semibold text-blue-600 hover:underline mb-2">
+                  {result.metadata.title}
+                </h2>
+                <p className="text-gray-600 mb-2">Author: {result.metadata.author}</p>
+                <p className="text-gray-600 mb-2">Source: {result.metadata.source}</p>
+                <p className="text-gray-500">{result.page_content.slice(0, 150)}...</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No results found. Please try a different query.</p>
+          )}
         </div>
       </div>
     </div>

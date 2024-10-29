@@ -23,75 +23,74 @@ Before you begin, ensure you have the following installed:
 
 ### Frontend Setup
 
-1. Clone the repository:
-```bash
-git clone <your-repo-url>
-cd <project-directory>
-```
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd <project-directory>
+   ```
 
-2. Install frontend dependencies:
-```bash
-npm install
-```
+2. **Install frontend dependencies:**
+   ```bash
+   npm install
+   ```
 
-3. Create a `.env` file in the root directory:
-```env
-VITE_API_URL=http://localhost:8000
-```
+3. **Create a `.env` file in the root directory:**
+   ```env
+   VITE_API_URL=http://localhost:8000
+   ```
 
-4. Start the development server:
-```bash
-npm run dev
-```
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
 
-The frontend will be available at `http://localhost:5173`
+   The frontend will be available at `http://localhost:8080`
 
 ### Backend Setup
 
-1. Navigate to the backend directory:
-```bash
-cd backend
-```
+1. **Navigate to the backend directory:**
+   ```bash
+   cd backend
+   ```
 
-2. Create and activate a Python virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-```
+2. **Install Poetry:**
+   ```bash
+   curl -sSL https://install.python-poetry.org | python3 -
+   ```
 
-3. Install Python dependencies:
-```bash
-pip install -r requirements.txt
-```
+3. **Install Python dependencies using Poetry:**
+   ```bash
+   poetry install
+   ```
 
-4. Set up environment variables by creating a `.env` file:
-```env
-MONGODB_URI=mongodb://localhost:27017/rag_search
-GOOGLE_APPLICATION_CREDENTIALS=path/to/your/credentials.json
-```
+4. **Set up environment variables by creating a `.env` file:**
+   ```env
+   MONGODB_URI=mongodb://localhost:27017/rag_search
+   GOOGLE_APPLICATION_CREDENTIALS=path/to/your/credentials.json
+   ```
 
-5. Start the FastAPI server:
-```bash
-uvicorn main:app --reload
-```
+5. **Start the FastAPI server using LangChain serve:**
+   ```bash
+   langchain serve --port 8101
+   ```
 
-The backend API will be available at `http://localhost:8000`
+   The backend API will be available at `http://localhost:8101`
 
 ### Google Cloud Setup
 
-1. Create a Google Cloud project and enable VertexAI API
-2. Create a service account and download the credentials JSON file
-3. Set the path to your credentials in the backend `.env` file
+1. **Create a Google Cloud project and enable VertexAI API**
+2. **Create a service account and download the credentials JSON file**
+3. **Set the path to your credentials in the backend `.env` file**
 
 ### MongoDB Setup
 
-1. Install MongoDB Community Edition
-2. Start the MongoDB service
-3. Create a new database named 'rag_search'
+1. **Install MongoDB Community Edition**
+2. **Start the MongoDB service**
+3. **Create a new database named 'rag_search'**
 
 ## API Documentation
 
-Once the backend is running, visit `http://localhost:8000/docs` for the complete API documentation.
+Once the backend is running, visit `http://localhost:8101/docs` for the complete API documentation.
 
 ## Development
 
@@ -102,17 +101,17 @@ Once the backend is running, visit `http://localhost:8000/docs` for the complete
 
 ## Available Scripts
 
-Frontend:
+**Frontend:**
 ```bash
 npm run dev        # Start development server
 npm run build      # Build for production
 npm run preview    # Preview production build
 ```
 
-Backend:
+**Backend:**
 ```bash
-uvicorn main:app --reload    # Start development server
-pytest                       # Run tests
+langchain serve --port 8101    # Start development server
+pytest                         # Run tests
 ```
 
 ## Contributing

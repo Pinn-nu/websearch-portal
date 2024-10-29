@@ -4,25 +4,40 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
+import axios from "axios";  // Import axios to make HTTP requests
+import { useAuth } from "@/context/AuthContext"; // Import the auth context
 
 const Index = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!username || !password) {
+      toast.error("Please enter both username and password");
+      return;
+    }
+
     try {
-      // TODO: Integrate with backend login API
-      // For now, we'll simulate a successful login
-      if (username && password) {
+      const response = await axios.post("http://127.0.0.1:8101/login", {
+        username,
+        password,
+      });
+
+      if (response.data.message === "Login successful") {
+        login(); // Set the user as authenticated
         toast.success("Login successful!");
-        navigate("/search");
-      } else {
-        toast.error("Please enter both username and password");
+        navigate("/search", { state: { username } }); // Pass username to the search page
       }
     } catch (error) {
-      toast.error("Login failed. Please try again.");
+      if (error.response && error.response.status === 400) {
+        toast.error("Invalid username or password");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
     }
   };
 
@@ -58,7 +73,7 @@ const Index = () => {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full"
+                className="w-full"  
               />
             </div>
           </CardContent>

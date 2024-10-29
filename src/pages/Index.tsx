@@ -11,7 +11,7 @@ const Index = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useNavigate();   
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,9 +44,10 @@ const Index = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
       <Card className="w-full max-w-md shadow-lg">
-        <CardHeader>
+        <CardHeader className="flex flex-col items-center">
+          <img src="./src/components/cute_logo.png" alt="Cute Logo" className="w-44 h-44 mb-4" />
           <h1 className="text-3xl font-bold text-center text-gray-800">Welcome</h1>
-          <p className="text-center text-gray-600">Sign in to access the KB Search Engine</p>
+          <p className="text-center text-gray-600">Sign in to access the RAG Search Engine</p>
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">

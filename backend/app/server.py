@@ -16,10 +16,6 @@ import os
 # Add the directory containing 'packages' to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-# Load the .env file
-load_dotenv()
-variable_DB = os.getenv('MONGODB_ATLAS_CLUSTER_URI')
-
 # Logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -35,6 +31,10 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers, including custom headers
 )
 
+# Load the .env file
+load_dotenv()
+variable_DB = os.getenv('MONGODB_ATLAS_CLUSTER_URI')
+
 try:
     # Connect to MongoDB using the URI from the environment variable
     client = MongoClient(variable_DB, serverSelectionTimeoutMS=5000)  # Add a timeout for server selection
@@ -46,12 +46,6 @@ try:
 except Exception as e:
     logger.error(f"Failed to connect to MongoDB: {e}")
     raise HTTPException(status_code=500, detail="Database connection error")
-
-# Simulated session storage
-session_store = {}
-
-# Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Edit this to add the chain
 add_routes(
@@ -71,28 +65,35 @@ class User(BaseModel):
     username: str
     password: str
 
-# Login endpoint with password hashing
-# แก้ไขให้ session นานขึ้น โดยที่แค่ refresh ก็ยังเข้าใช้งานได้อยู่
+
+# Simulated session storage
+session_store = {}
+
+# Password hashing context
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 @app.post("/login")
-async def login(user: User):#, request: Request):
+async def login(user: User, request: Request):
     # Use find_one instead of get for MongoDB
     db_user = users_collection.find_one({"username": user.username})
     if not db_user or not pwd_context.verify(user.password, db_user['password']):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     ## Store username in session
-    #session_id = str(id(request))
-    #session_store[session_id] = user.username
+    # Generate a session ID using the request object
+    session_id = str(id(request))
+    session_store[session_id] = user.username
     response = JSONResponse(content={"message": "Login successful"})
-    #response.set_cookie(key="session_id", value=session_id)
+    # Set a cookie with the session ID
+    response.set_cookie(key="session_id", value=session_id)
     return response
 
 ## Dependency to get the current user from session
-#def get_current_user(request: Request):
-#    session_id = request.cookies.get("session_id")
-#    if session_id is None or session_id not in session_store:
-#        raise HTTPException(status_code=401, detail="Not authenticated")
-#    return session_store[session_id]
+def get_current_user(request: Request):
+    session_id = request.cookies.get("session_id")
+    if session_id is None or session_id not in session_store:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return session_store[session_id]
 
 # Function to add a query to the search history collection
 def add_query_to_search_history(username, query, result):
@@ -114,51 +115,49 @@ class QueryRequest(BaseModel):
 
 # Define an endpoint to receive query and retrieve results
 @app.post("/retrieve")
-async def retrieve_data(username: str,query_request: QueryRequest):#, request: Request):
-    #current_user = get_current_user(request)
-    #current_user = "test-1"
+async def retrieve_data(query_request: QueryRequest):
     query = query_request.query
     if not query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
     
     try:
-        logger.info(f"Query received from {username}: {query}")
-        
-        # Log the query to the search history
-        add_query_to_search_history(username, query, result)
+        logger.info(f"Query received: {query}")
         
         # Attempt to invoke the query
         result = retrieve.invoke(query)
+        if not result:
+            raise HTTPException(status_code=404, detail="No results found for the query")
         logger.info(f"Result for query '{query}': {result}")
-        
-        # Log the query to the search history
-        #add_query_to_search_history(current_user, query, result)
-        
+
         return result
+    except HTTPException as e:
+        logger.error(f"HTTP error: {e.detail}")
+        raise e
     except Exception as e:
-        logger.error(f"Error retrieving data for {username} with query '{query}': {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        logger.error(f"Error retrieving data for query '{query}': {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Endpoint to get the last search history entry by username
-@app.get("/search_history/{username}")
-async def get_search_history(username: str):
+@app.get("/search_history")
+async def get_search_history(request: Request):
+    current_user = get_current_user(request)
     try:
-        logger.info(f"Retrieving search history for user: {username}")
+        logger.info(f"Retrieving search history for user: {current_user}")
         
         # Retrieve all search history entries for the given username
         entries = list(search_history_collection.find(
-            {"username": username},
+            {"username": current_user},
             sort=[("timestamp", -1)]  # Sort by timestamp in descending order
         ))
         
         if not entries:
-            logger.info(f"No search history found for user: {username}")
+            logger.info(f"No search history found for user: {current_user}")
             return {"message": "No search history found"}
         
-        logger.info(f"Search history retrieved for user: {username}")
+        logger.info(f"Search history retrieved for user: {current_user}")
         return entries
     except Exception as e:
-        logger.error(f"Error retrieving search history for user {username}: {e}", exc_info=True)
+        logger.error(f"Error retrieving search history for user {current_user}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 if __name__ == "__main__":

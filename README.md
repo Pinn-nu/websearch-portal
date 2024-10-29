@@ -4,8 +4,8 @@
 
 # RAG Search Engine Web Application
 
-A modern web application for RAG (Retrieval-Augmented Generation) search using MongoDB, Google VertexAI API, and FastAPI backend.
-
+A simple web application for RAG (Retrieval-Augmented Generation) search using MongoDB, Google VertexAI API, and FastAPI backend.
+    
 ## Features
 
 - Clean and elegant user interface
@@ -14,6 +14,12 @@ A modern web application for RAG (Retrieval-Augmented Generation) search using M
 - Real-time search results with modal view
 - Search history tracking
 - Responsive design
+
+### Login Page
+![Login Page](./src/components/login-page.png)
+
+### Search Page
+![Search Page](./src/components/search-page.png)
 
 ## Prerequisites
 

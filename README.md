@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./src/components/cute_logo.png" alt="Cute Logo" width="200" height="200">
+</p>
+
 # RAG Search Engine Web Application
 
 A modern web application for RAG (Retrieval-Augmented Generation) search using MongoDB, Google VertexAI API, and FastAPI backend.

@@ -1,5 +1,4 @@
 from packages.websearch.retriever import filter_retriever as retrieve
-from packages.websearch.function import pretty_print_docs as print_docs
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.responses import RedirectResponse, JSONResponse
 from pydantic import BaseModel
@@ -7,7 +6,6 @@ from pymongo import MongoClient
 from langserve import add_routes
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Dict, Any
 from passlib.context import CryptContext
 from datetime import datetime
 import logging

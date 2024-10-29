@@ -46,7 +46,7 @@ const Index = () => {
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
           <h1 className="text-3xl font-bold text-center text-gray-800">Welcome</h1>
-          <p className="text-center text-gray-600">Sign in to access the RAG Search Engine</p>
+          <p className="text-center text-gray-600">Sign in to access the KB Search Engine</p>
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">

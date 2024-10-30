@@ -7,7 +7,7 @@
 1. **Navigate to the backend directory:**
 
    ```bash
-   cd genai-webapp-backend
+   cd backend
    ```
 
 2. **Install Poetry:**
@@ -55,8 +55,8 @@ Once the backend is running, visit `http://localhost:8101/docs` for the complete
 
 ## Development
 
-- Frontend code is in the `genai-webapp-frontend` directory
-- Backend code is in the `genai-webapp-backend` directory
+- Frontend code is in the `src` directory
+- Backend code is in the `backend` directory
 - Components use shadcn/ui library
 - Styling is done with Tailwind CSS
 

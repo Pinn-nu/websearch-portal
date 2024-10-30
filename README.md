@@ -1,8 +1,10 @@
+# RAG Search Engine Web Application
+
+<!-- markdownlint-disable MD033 -->
 <p align="center">
   <img src="./src/components/cute_logo.png" alt="Cute Logo" width="200" height="200">
 </p>
-
-# RAG Search Engine Web Application
+<!-- markdownlint-enable MD033 -->
 
 A simple web application for RAG (Retrieval-Augmented Generation) search using MongoDB, Google VertexAI API, and FastAPI backend.
     
@@ -44,12 +46,7 @@ Before you begin, ensure you have the following installed:
    npm install
    ```
 
-3. **Create a `.env` file in the root directory:**
-   ```env
-   VITE_API_URL=http://localhost:8000
-   ```
-
-4. **Start the development server:**
+3. **Start the development server:**
    ```bash
    npm run dev
    ```
@@ -131,10 +128,6 @@ pytest                         # Run tests
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Support
 

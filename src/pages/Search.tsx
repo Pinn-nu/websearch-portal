@@ -22,6 +22,14 @@ const Search = () => {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
 
+  // Load previous results from localStorage
+  useEffect(() => {
+    const savedResults = localStorage.getItem("searchResults");
+    if (savedResults) {
+      setResults(JSON.parse(savedResults));
+    }
+  }, []);
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/");
@@ -29,7 +37,6 @@ const Search = () => {
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    // Fetch all titles from the database
     const fetchTitles = async () => {
       try {
         const response = await fetch("http://127.0.0.1:8101/all-titles");
@@ -59,10 +66,18 @@ const Search = () => {
 
       const data = await response.json();
       setResults(data);
+      // Save results to localStorage
+      localStorage.setItem("searchResults", JSON.stringify(data));
       toast.success("Search completed successfully");
     } catch (error) {
       toast.error("Search failed. Please try again.");
       console.error("Search error:", error);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -140,6 +155,7 @@ const Search = () => {
                 placeholder="Enter your search query..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
                 className="flex-1"
               />
               <Button onClick={handleSearch} className="bg-primary hover:bg-primary/90">

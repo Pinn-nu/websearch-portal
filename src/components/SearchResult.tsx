@@ -22,7 +22,7 @@ const SearchResult = ({ result }: SearchResultProps) => {
     <>
       <div className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
         <h2
-          className="text-lg font-semibold text-blue-600 hover:underline cursor-pointer mb-2"
+          className="text-lg font-semibold text-primary hover:underline cursor-pointer mb-2"
           onClick={() => setIsOpen(true)}
         >
           {result.title}

@@ -32,15 +32,14 @@ const ResultPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm p-4">
+      <nav className="bg-primary text-white shadow-sm p-4">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <div className="flex gap-2">
-            {/* 
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate(-1)}
-              className="hover:bg-gray-100"
+              className="hover:bg-primary/90 text-white"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
@@ -48,17 +47,16 @@ const ResultPage = () => {
               variant="ghost"
               size="icon"
               onClick={() => navigate("/search")}
-              className="hover:bg-gray-100"
+              className="hover:bg-primary/90 text-white"
             >
               <Home className="h-5 w-5" />
             </Button>
-            */}
           </div>
         </div>
       </nav>
 
       <div className="max-w-4xl mx-auto pt-8 px-4">
-        <h1 className="text-3xl font-bold mb-4">{result.metadata.title}</h1>
+        <h1 className="text-3xl font-bold mb-4 text-primary">{result.metadata.title}</h1>
         
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-gray-600 mb-2"><strong>Source:</strong> {result.metadata.source}</p>

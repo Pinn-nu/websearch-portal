@@ -47,7 +47,7 @@ const ResultPage = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => window.close()}
+              onClick={() => navigate("/search", { state: { query: localStorage.getItem("lastQuery") } })}
               className="hover:bg-primary/90 text-white"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -55,7 +55,9 @@ const ResultPage = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => window.open("/search", "_self")}
+              onClick={() => {
+                window.open("/search", "_self");
+              }}
               className="hover:bg-primary/90 text-white"
             >
               <Home className="h-5 w-5" />

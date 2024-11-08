@@ -27,7 +27,16 @@ const ResultPage = () => {
   }, []);
 
   if (!result) {
-    return <div>No result found</div>;
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-primary mb-4">No result found</h1>
+          <Button onClick={() => window.close()} className="bg-primary hover:bg-primary/90">
+            Close Window
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -38,7 +47,7 @@ const ResultPage = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate(-1)}
+              onClick={() => window.close()}
               className="hover:bg-primary/90 text-white"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -46,7 +55,7 @@ const ResultPage = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate("/search")}
+              onClick={() => window.open("/search", "_self")}
               className="hover:bg-primary/90 text-white"
             >
               <Home className="h-5 w-5" />

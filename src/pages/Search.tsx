@@ -1,23 +1,24 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { Home, History, LogOut, Filter } from "lucide-react";
+import { Home, History, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-interface SearchFilters {
-  title?: string;
-  date?: string;
-  category?: string;
+interface SearchResult {
+  id: string;
+  title: string;
+  snippet: string;
+  category: string;
+  date: string;
 }
 
 const Search = () => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-  const [filters, setFilters] = useState<SearchFilters>({});
-  const [showFilters, setShowFilters] = useState(false);
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [allTitles, setAllTitles] = useState<SearchResult[]>([]);
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
 
@@ -27,6 +28,21 @@ const Search = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  useEffect(() => {
+    // Fetch all titles from the database
+    const fetchTitles = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8101/all-titles");
+        if (!response.ok) throw new Error("Failed to fetch titles");
+        const data = await response.json();
+        setAllTitles(data);
+      } catch (error) {
+        toast.error("Failed to load titles");
+      }
+    };
+    fetchTitles();
+  }, []);
+
   const handleSearch = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8101/retrieve", {
@@ -34,10 +50,7 @@ const Search = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          query,
-          filters,
-        }),
+        body: JSON.stringify({ query }),
       });
 
       if (!response.ok) {
@@ -57,6 +70,11 @@ const Search = () => {
     logout();
     toast.success("Logged out successfully");
     navigate("/");
+  };
+
+  const openResult = (result: SearchResult) => {
+    localStorage.setItem("selectedResult", JSON.stringify(result));
+    window.open("/result", "_blank");
   };
 
   return (
@@ -92,9 +110,30 @@ const Search = () => {
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto pt-8 px-4">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div className="flex flex-col gap-4">
+      <div className="flex max-w-6xl mx-auto pt-8 px-4">
+        {/* Sidebar with all titles */}
+        <div className="w-1/4 mr-6">
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <h2 className="text-lg font-semibold text-primary mb-4">All Documents</h2>
+            <ScrollArea className="h-[600px]">
+              <div className="space-y-2">
+                {allTitles.map((title) => (
+                  <div
+                    key={title.id}
+                    onClick={() => openResult(title)}
+                    className="p-2 hover:bg-gray-100 rounded cursor-pointer text-sm"
+                  >
+                    {title.title}
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
+        </div>
+
+        {/* Main content */}
+        <div className="flex-1">
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
             <div className="flex gap-2">
               <Input
                 type="text"
@@ -106,65 +145,28 @@ const Search = () => {
               <Button onClick={handleSearch} className="bg-primary hover:bg-primary/90">
                 Search
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
-                className="border-primary text-primary hover:bg-primary/10"
-              >
-                <Filter className="h-5 w-5" />
-              </Button>
             </div>
-
-            {showFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Select
-                  onValueChange={(value) => setFilters({ ...filters, category: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="technical">Technical</SelectItem>
-                    <SelectItem value="business">Business</SelectItem>
-                    <SelectItem value="general">General</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Input
-                  type="text"
-                  placeholder="Filter by title..."
-                  onChange={(e) => setFilters({ ...filters, title: e.target.value })}
-                />
-
-                <Input
-                  type="date"
-                  onChange={(e) => setFilters({ ...filters, date: e.target.value })}
-                />
-              </div>
-            )}
           </div>
-        </div>
 
-        <div className="space-y-4">
-          {results.map((result) => (
-            <div
-              key={result.id}
-              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
-              onClick={() => navigate("/result", { state: result })}
-            >
-              <h2 className="text-xl font-semibold text-primary hover:underline mb-2">
-                {result.title}
-              </h2>
-              <p className="text-gray-600 mb-2">
-                {result.snippet}
-              </p>
-              <div className="flex gap-2 text-sm text-gray-500">
-                <span>{result.category}</span>
-                <span>•</span>
-                <span>{new Date(result.date).toLocaleDateString()}</span>
+          <div className="space-y-4">
+            {results.map((result) => (
+              <div
+                key={result.id}
+                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                onClick={() => openResult(result)}
+              >
+                <h2 className="text-xl font-semibold text-primary hover:underline mb-2">
+                  {result.title}
+                </h2>
+                <p className="text-gray-600 mb-2">{result.snippet}</p>
+                <div className="flex gap-2 text-sm text-gray-500">
+                  <span>{result.category}</span>
+                  <span>•</span>
+                  <span>{new Date(result.date).toLocaleDateString()}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

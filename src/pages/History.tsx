@@ -60,13 +60,13 @@ const History = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm p-4">
+      <nav className="bg-primary text-white shadow-sm p-4">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/search")}
-            className="hover:bg-gray-100"
+            className="hover:bg-primary/90 text-white"
           >
             <Home className="h-5 w-5" />
           </Button>
@@ -74,14 +74,14 @@ const History = () => {
       </nav>
 
       <div className="max-w-4xl mx-auto pt-8 px-4">
-        <h1 className="text-2xl font-bold mb-6">Search History</h1>
+        <h1 className="text-2xl font-bold mb-6 text-primary">Search History</h1>
         <div className="space-y-4">
           {searchHistory.map((item) => (
             <Card key={item._id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-2">
                   <h2
-                    className="text-lg font-semibold text-blue-600 cursor-pointer"
+                    className="text-lg font-semibold text-primary cursor-pointer hover:underline"
                     onClick={() => handleQueryClick(item.query)}
                   >
                     {item.query}
@@ -92,10 +92,10 @@ const History = () => {
                   {item.result.map((result: any, index: number) => (
                     <div
                       key={index}
-                      className="pl-4 border-l-2 border-gray-200 cursor-pointer"
+                      className="pl-4 border-l-2 border-gray-200 cursor-pointer hover:border-primary"
                       onClick={() => handleResultClick(result)}
                     >
-                      <h3 className="font-medium hover:text-blue-600">{result.metadata.title}</h3>
+                      <h3 className="font-medium hover:text-primary">{result.metadata.title}</h3>
                       <p className="text-sm text-gray-600">{result.page_content.slice(0, 100)}...</p>
                     </div>
                   ))}

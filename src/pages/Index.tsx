@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "sonner";
-import axios from "axios";  // Import axios to make HTTP requests
-import { useAuth } from "@/context/AuthContext"; // Import the auth context
+import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 const Index = () => {
   const [username, setUsername] = useState("");
@@ -28,9 +28,9 @@ const Index = () => {
       });
 
       if (response.data.message === "Login successful") {
-        login(); // Set the user as authenticated
+        login();
         toast.success("Login successful!");
-        navigate("/search", { state: { username } }); // Pass username to the search page
+        navigate("/search", { state: { username } });
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -42,12 +42,12 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/20">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="flex flex-col items-center">
           <img src="./src/components/cute_logo.png" alt="Cute Logo" className="w-44 h-44 mb-4" />
-          <h1 className="text-3xl font-bold text-center text-gray-800">Welcome</h1>
-          <p className="text-center text-gray-600">Sign in to access the RAG Search Engine</p>
+          <h1 className="text-3xl font-bold text-center text-primary">Welcome</h1>
+          <p className="text-center text-muted">Sign in to access the RAG Search Engine</p>
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">
@@ -74,12 +74,12 @@ const Index = () => {
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full"  
+                className="w-full"
               />
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
               Sign In
             </Button>
           </CardFooter>

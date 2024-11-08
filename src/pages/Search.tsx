@@ -60,14 +60,14 @@ const Search = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5]">
-      <nav className="bg-[#4B0082] text-white shadow-lg p-4">
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-primary text-white shadow-lg p-4">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/search")}
-            className="hover:bg-[#5c0099]"
+            className="hover:bg-primary/90 text-white"
           >
             <Home className="h-5 w-5" />
           </Button>
@@ -76,7 +76,7 @@ const Search = () => {
               variant="ghost"
               size="icon"
               onClick={() => navigate("/history")}
-              className="hover:bg-[#5c0099]"
+              className="hover:bg-primary/90 text-white"
             >
               <History className="h-5 w-5" />
             </Button>
@@ -84,7 +84,7 @@ const Search = () => {
               variant="ghost"
               size="icon"
               onClick={handleLogout}
-              className="hover:bg-[#5c0099]"
+              className="hover:bg-primary/90 text-white"
             >
               <LogOut className="h-5 w-5" />
             </Button>
@@ -103,13 +103,13 @@ const Search = () => {
                 onChange={(e) => setQuery(e.target.value)}
                 className="flex-1"
               />
-              <Button onClick={handleSearch} className="bg-[#4B0082] hover:bg-[#5c0099]">
+              <Button onClick={handleSearch} className="bg-primary hover:bg-primary/90">
                 Search
               </Button>
               <Button
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
-                className="border-[#4B0082] text-[#4B0082]"
+                className="border-primary text-primary hover:bg-primary/10"
               >
                 <Filter className="h-5 w-5" />
               </Button>
@@ -152,7 +152,7 @@ const Search = () => {
               className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
               onClick={() => navigate("/result", { state: result })}
             >
-              <h2 className="text-xl font-semibold text-[#4B0082] hover:underline mb-2">
+              <h2 className="text-xl font-semibold text-primary hover:underline mb-2">
                 {result.title}
               </h2>
               <p className="text-gray-600 mb-2">
